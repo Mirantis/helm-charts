@@ -1,14 +1,29 @@
 apiVersion: v1
 entries:
   nginx:
-  - apiVersion: v2
+  - annotations:
+      category: Infrastructure
+    apiVersion: v2
     appVersion: 1.16.0
-    created: "2020-11-26T10:06:07.457379Z"
-    description: A Helm chart for Kubernetes
-    digest: 03aca6c3583dc3b64e3707f6e5498f847434d0bfa8d0f6610c6cbbdb941c0d0c
+    created: "2020-11-26T15:42:21.288919Z"
+    description: A NGINX Docker Community based Helm chart for Kubernetes
+    digest: 951c0eec857d91a039bb068417ffb744e6382e59003daabd025fa5eb784e5a9f
+    home: https://github.com/Mirantis/helm-charts
+    keywords:
+    - nginx
+    - http
+    - web
+    - www
+    - reverse proxy
+    maintainers:
+    - email: helmcharts@mirantis.com
+      name: Mirantis
     name: nginx
+    sources:
+    - https://github.com/mirantis/helm-charts
+    - http://www.nginx.org
     type: application
     urls:
     - https://mirantis.github.io/helm-charts/charts/nginx-0.1.0.tgz
     version: 0.1.0
-generated: "2020-11-26T10:06:07.455699Z"
+generated: "2020-11-26T15:42:21.283727Z"
