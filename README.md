@@ -5,7 +5,7 @@ Popular applications provided by [Mirantis](https://mirantis.com), ready to inst
 ## TL;DR
 
 ```bash
-$ helm repo add mirantis https://charts.mirantis.com/mirantis
+$ helm repo add mirantis https://charts.mirantis.com
 $ helm search repo mirantis
 $ helm install my-release mirantis/<chart>
 ```
@@ -27,7 +27,7 @@ To install Helm, refer to the [Helm install guide](https://github.com/helm/helm#
 The following command allows you to download and install all the charts from this repository:
 
 ```bash
-$ helm repo add mirantis https://charts.mirantis.com/mirantis
+$ helm repo add mirantis https://charts.mirantis.com
 ```
 
 ### Using Helm
