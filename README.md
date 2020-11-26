@@ -7,7 +7,7 @@ Popular applications provided by [Mirantis](https://mirantis.com), ready to inst
 ```bash
 $ helm repo add mirantis https://charts.mirantis.com
 $ helm search repo mirantis
-$ helm install my-release mirantis/<chart>
+$ helm install my-release mirantis/<package-name>
 ```
 
 ## Before you begin
