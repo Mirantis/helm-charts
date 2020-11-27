@@ -1,4 +1,4 @@
-[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/mirantis-nginx)](https://artifacthub.io/packages/search?repo=mirantis-nginx)
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/mirantis)](https://artifacthub.io/packages/search?repo=mirantis)
 
 # NGINX
 
