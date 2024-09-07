@@ -1,0 +1,223 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "vsphere-csi-driver.controller.fullname" . }}
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.controller.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  selector:
+    matchLabels:
+      {{- include "vsphere-csi-driver.controller.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "vsphere-csi-driver.controller.selectorLabels" . | nindent 8 }}
+    spec:
+      priorityClassName: system-cluster-critical # Guarantees scheduling for critical system pods
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - {{ include "vsphere-csi-driver.controller.name" . }}
+              topologyKey: "kubernetes.io/hostname"
+        {{- with .Values.controller.nodeAffinity }}
+        nodeAffinity:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      serviceAccountName: {{ include "vsphere-csi-driver.controller.serviceAccountName" . }}
+      {{- with .Values.controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: "Default"
+      containers:
+        - name: csi-attacher
+          image: "{{ .Values.images.csiAttacher.repo }}:{{ .Values.images.csiAttacher.tag }}"
+          args:
+            - "--v=4"
+            - "--timeout=300s"
+            - "--csi-address=$(ADDRESS)"
+            - "--leader-election"
+            - "--leader-election-lease-duration=120s"
+            - "--leader-election-renew-deadline=60s"
+            - "--leader-election-retry-period=30s"
+            - "--kube-api-qps=100"
+            - "--kube-api-burst=100"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - mountPath: /csi
+              name: socket-dir
+        - name: csi-resizer
+          image: "{{ .Values.images.csiResizer.repo }}:{{ .Values.images.csiResizer.tag }}"
+          args:
+            - "--v=4"
+            - "--timeout=300s"
+            - "--handle-volume-inuse-error=false"
+            - "--csi-address=$(ADDRESS)"
+            - "--kube-api-qps=100"
+            - "--kube-api-burst=100"
+            - "--leader-election"
+            - "--leader-election-lease-duration=120s"
+            - "--leader-election-renew-deadline=60s"
+            - "--leader-election-retry-period=30s"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - mountPath: /csi
+              name: socket-dir
+        - name: vsphere-csi-controller
+          image: "{{ .Values.images.driver.repo }}:{{ .Values.images.driver.tag }}"
+          args:
+            - "--fss-name=internal-feature-states.csi.vsphere.vmware.com"
+            - "--fss-namespace=$(CSI_NAMESPACE)"
+          imagePullPolicy: "Always"
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///csi/csi.sock
+            - name: X_CSI_MODE
+              value: "controller"
+            - name: X_CSI_SPEC_DISABLE_LEN_CHECK
+              value: "true"
+            - name: X_CSI_SERIAL_VOL_ACCESS_TIMEOUT
+              value: 3m
+            - name: VSPHERE_CSI_CONFIG
+              value: "/etc/cloud/csi-vsphere.conf"
+            - name: LOGGER_LEVEL
+              value: "PRODUCTION" # Options: DEVELOPMENT, PRODUCTION
+            - name: INCLUSTER_CLIENT_QPS
+              value: "100"
+            - name: INCLUSTER_CLIENT_BURST
+              value: "100"
+            - name: CSI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+          volumeMounts:
+            - mountPath: /etc/cloud
+              name: vsphere-config-volume
+              readOnly: true
+            - mountPath: /csi
+              name: socket-dir
+          ports:
+            - name: healthz
+              containerPort: 9808
+              protocol: TCP
+            - name: prometheus
+              containerPort: 2112
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+            periodSeconds: 180
+            failureThreshold: 3
+        - name: liveness-probe
+          image: "{{ .Values.images.livenessProbe.repo }}:{{ .Values.images.livenessProbe.tag }}"
+          args:
+            - "--v=4"
+            - "--csi-address=/csi/csi.sock"
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: vsphere-syncer
+          image: "{{ .Values.images.syncer.repo }}:{{ .Values.images.syncer.tag }}"
+          args:
+            - "--leader-election"
+            - "--leader-election-lease-duration=30s"
+            - "--leader-election-renew-deadline=20s"
+            - "--leader-election-retry-period=10s"
+            - "--fss-name=internal-feature-states.csi.vsphere.vmware.com"
+            - "--fss-namespace=$(CSI_NAMESPACE)"
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 2113
+              name: prometheus
+              protocol: TCP
+          env:
+            - name: FULL_SYNC_INTERVAL_MINUTES
+              value: "30"
+            - name: VSPHERE_CSI_CONFIG
+              value: "/etc/cloud/csi-vsphere.conf"
+            - name: LOGGER_LEVEL
+              value: "PRODUCTION" # Options: DEVELOPMENT, PRODUCTION
+            - name: INCLUSTER_CLIENT_QPS
+              value: "100"
+            - name: INCLUSTER_CLIENT_BURST
+              value: "100"
+            - name: CSI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+          volumeMounts:
+            - mountPath: /etc/cloud
+              name: vsphere-config-volume
+              readOnly: true
+        - name: csi-provisioner
+          image: "{{ .Values.images.csiProvisioner.repo }}:{{ .Values.images.csiProvisioner.tag }}"
+          args:
+            - "--v=4"
+            - "--timeout=300s"
+            - "--csi-address=$(ADDRESS)"
+            - "--kube-api-qps=100"
+            - "--kube-api-burst=100"
+            - "--leader-election"
+            - "--leader-election-lease-duration=120s"
+            - "--leader-election-renew-deadline=60s"
+            - "--leader-election-retry-period=30s"
+            - "--default-fstype=ext4"
+            # needed only for topology aware setup
+            #- "--feature-gates=Topology=true"
+            #- "--strict-topology"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - mountPath: /csi
+              name: socket-dir
+        - name: csi-snapshotter
+          image: "{{ .Values.images.csiSnapshotter.repo }}:{{ .Values.images.csiSnapshotter.tag }}"
+          args:
+            - "--v=4"
+            - "--kube-api-qps=100"
+            - "--kube-api-burst=100"
+            - "--timeout=300s"
+            - "--csi-address=$(ADDRESS)"
+            - "--leader-election"
+            - "--leader-election-lease-duration=120s"
+            - "--leader-election-renew-deadline=60s"
+            - "--leader-election-retry-period=30s"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - mountPath: /csi
+              name: socket-dir
+      volumes:
+        - name: vsphere-config-volume
+          secret:
+            secretName: {{ .Values.vcenterConfig.secretName }}
+        - name: socket-dir
+          emptyDir: {}

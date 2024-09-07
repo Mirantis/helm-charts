@@ -1,0 +1,14 @@
+{{- if .Values.defaultStorageClass.enabled }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.defaultStorageClass.name }}
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: csi.vsphere.vmware.com
+allowVolumeExpansion: {{ .Values.defaultStorageClass.allowVolumeExpansion }}
+parameters:
+  csi.storage.k8s.io/fstype: "ext4"
+{{- end }}

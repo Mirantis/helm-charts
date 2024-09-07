@@ -1,0 +1,6 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ include "vsphere-csi-driver.controller.serviceAccountName" . }}
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}

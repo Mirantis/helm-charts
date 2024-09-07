@@ -1,0 +1,85 @@
+# Default values for vsphere-csi-driver.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+controller:
+  replicas: 1
+
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    # uncomment below toleration if you need an aggressive pod eviction in case when
+    # node becomes not-ready or unreachable. Default is 300 seconds if not specified.
+    # - key: node.kubernetes.io/not-ready
+    #  operator: Exists
+    #  effect: NoExecute
+    #  tolerationSeconds: 30
+    # - key: node.kubernetes.io/unreachable
+    #  operator: Exists
+    #  effect: NoExecute
+    #  tolerationSeconds: 30
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+      - matchExpressions:
+        - key: node-role.kubernetes.io/controlplane
+          operator: Exists
+      - matchExpressions:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+node:
+  kubeletPath: /var/lib/kubelet
+  tolerations:
+    - effect: NoExecute
+      operator: Exists
+    - effect: NoSchedule
+      operator: Exists
+
+vcenterConfig:
+  enabled: false
+  secretName: vcenter-config-secret
+  clusterID: ""
+  thumbprint: ""
+  vcenter: ""
+  insecure: "true"
+  user: ""
+  password: ""
+  port: "443"
+  datacenters: ""
+
+images:
+  driver:
+    repo: gcr.io/cloud-provider-vsphere/csi/release/driver
+    tag: v3.3.1
+  syncer:
+    repo: gcr.io/cloud-provider-vsphere/csi/release/syncer
+    tag: v3.3.1
+  nodeDriverRegistrar:
+    repo: registry.k8s.io/sig-storage/csi-node-driver-registrar
+    tag: v2.10.1
+  csiAttacher:
+    repo: registry.k8s.io/sig-storage/csi-attacher
+    tag: v4.5.1
+  csiResizer:
+    repo: registry.k8s.io/sig-storage/csi-resizer
+    tag: v1.10.1
+  csiProvisioner:
+    repo: registry.k8s.io/sig-storage/csi-provisioner
+    tag: v4.0.1
+  csiSnapshotter:
+    repo:  registry.k8s.io/sig-storage/csi-snapshotter
+    tag: v7.0.2
+  livenessProbe:
+    repo: registry.k8s.io/sig-storage/livenessprobe
+    tag: v2.12.0
+
+defaultStorageClass:
+  enabled: false
+  name: vsphere-csi
+  allowVolumeExpansion: true

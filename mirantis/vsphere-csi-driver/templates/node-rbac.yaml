@@ -1,0 +1,55 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vsphere-csi-driver.node.fullname" . }}-node-cluster-role
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ["cns.vmware.com"]
+    resources: ["csinodetopologies"]
+    verbs: ["create", "watch", "get", "patch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vsphere-csi-driver.node.fullname" . }}-cluster-role-binding
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "vsphere-csi-driver.node.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "vsphere-csi-driver.node.fullname" . }}-node-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vsphere-csi-driver.node.fullname" . }}-node-role
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "vsphere-csi-driver.node.fullname" . }}-node-binding
+  labels:
+    {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "vsphere-csi-driver.node.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "vsphere-csi-driver.node.fullname" . }}-node-role
+  apiGroup: rbac.authorization.k8s.io
