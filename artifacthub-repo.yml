@@ -1,5 +1,0 @@
-# Artifact Hub repository metadata file
-repositoryID: 96117f8d-bc02-4d51-924b-7c74220d1288
-owners: # (optional, used to claim repository ownership)
-  - name: mirantis
-    email: helmcharts@mirantis.com
