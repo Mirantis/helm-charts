@@ -5,7 +5,7 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-09-06T19:30:38.361854137-05:00"
+    created: "2024-10-02T15:38:57.402092565-05:00"
     description: A NGINX Docker Community based Helm chart for Kubernetes
     digest: 653b11d9fc27c423c3207705c4eacce88ba55a1fa4824feeb0b7618548bc3f88
     home: https://github.com/Mirantis/helm-charts
@@ -29,7 +29,17 @@ entries:
   vsphere-csi-driver:
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2024-09-06T19:30:38.362553128-05:00"
+    created: "2024-10-02T15:38:57.426806287-05:00"
+    description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
+    digest: 76d353ef3231092e5f954c20d673b3509c97d6e962efcc91592ab01d92cf09e3
+    name: vsphere-csi-driver
+    type: application
+    urls:
+    - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 3.3.1
+    created: "2024-10-02T15:38:57.425296937-05:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 2c5050ad7a822d8d0eee3f54aaf6524f82d9787efaaeb1ba679cfd8898389893
     name: vsphere-csi-driver
@@ -37,4 +47,4 @@ entries:
     urls:
     - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.1.tgz
     version: 0.0.1
-generated: "2024-09-06T19:30:38.36123278-05:00"
+generated: "2024-10-02T15:38:57.400434036-05:00"
