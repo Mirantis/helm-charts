@@ -55,10 +55,10 @@ vcenterConfig:
 
 images:
   driver:
-    repo: gcr.io/cloud-provider-vsphere/csi/release/driver
+    repo: registry.k8s.io/csi-vsphere/driver
     tag: v3.3.1
   syncer:
-    repo: gcr.io/cloud-provider-vsphere/csi/release/syncer
+    repo: registry.k8s.io/csi-vsphere/syncer
     tag: v3.3.1
   nodeDriverRegistrar:
     repo: registry.k8s.io/sig-storage/csi-node-driver-registrar

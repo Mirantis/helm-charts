@@ -31,13 +31,13 @@ values under `vcenterConfig`.
 | images.csiResizer.tag                    | string | `"v1.10.1"`                                               | Tag for the CSI resizer                                                            |
 | images.csiSnapshotter.repo               | string | `"registry.k8s.io/sig-storage/csi-snapshotter"`           | Repo for the CSI snapshotter                                                       |
 | images.csiSnapshotter.tag                | string | `"v7.0.2"`                                                | Tag for the CSI snapshotter                                                        |
-| images.driver.repo                       | string | `"gcr.io/cloud-provider-vsphere/csi/release/driver"`      | Repo for the vcenter CSI provider driver                                           |
+| images.driver.repo                       | string | `"registry.k8s.io/csi-vsphere/driver"`                    | Repo for the vcenter CSI provider driver                                           |
 | images.driver.tag                        | string | `"v3.3.1"`                                                | Tag for the vcenter CSI provider driver                                            |
 | images.livenessProbe.repo                | string | `"registry.k8s.io/sig-storage/livenessprobe"`             | Repo for the livenessprobe                                                         |
 | images.livenessProbe.tag                 | string | `"v2.12.0"`                                               | Tag for the livenessprobe                                                          |
 | images.nodeDriverRegistrar.repo          | string | `"registry.k8s.io/sig-storage/csi-node-driver-registrar"` | Repo for the CSI driver registrar                                                  |
 | images.nodeDriverRegistrar.tag           | string | `"v2.10.1"`                                               | Tag for the CSI driver registrar                                                   |
-| images.syncer.repo                       | string | `"gcr.io/cloud-provider-vsphere/csi/release/syncer"`      | Repo for the vcenter CSI provider syncer                                           |
+| images.syncer.repo                       | string | `"registry.k8s.io/csi-vsphere/syncer"`                   | Repo for the vcenter CSI provider syncer                                           |
 | images.syncer.tag                        | string | `"v3.3.1"`                                                | Tag for the vcenter CSI provider syncer                                            |
 | node.kubeletPath                         | string | `"/var/lib/kubelet"`                                      | Kubelet path on the node                                                           |
 | node.tolerations                         | map    |                                                           | Node provisioner tolerations                                                       |
