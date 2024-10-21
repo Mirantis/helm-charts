@@ -1,11 +1,33 @@
 apiVersion: v1
 entries:
+  cloud-provider-azure:
+  - apiVersion: v1
+    created: "2024-10-21T14:49:38.993570169-05:00"
+    description: A Helm chart for installing kubernetes-sigs/cloud-provider-azure
+      components
+    digest: d96df7019e2d236c012b7f155b982536f3f2abf811bb0241760f7b86bc43ca2b
+    home: https://raw.githubusercontent.com/kubernetes-sigs/cloud-provider-azure/master/helm/cloud-provider-azure/README.md
+    keywords:
+    - cloud-provider-azure
+    - kubernetes-sigs
+    - kubernetes
+    maintainers:
+    - email: jackfrancis@gmail.com
+      name: Jack Francis
+    - email: zhechengli1995@outlook.com
+      name: Zhecheng Li
+    name: cloud-provider-azure
+    sources:
+    - https://github.com/kubernetes-sigs/cloud-provider-azure
+    urls:
+    - https://charts.mirantis.com/charts/cloud-provider-azure-1.31.2.tgz
+    version: 1.31.2
   nginx:
   - annotations:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-10-02T15:38:57.402092565-05:00"
+    created: "2024-10-21T14:49:38.993911325-05:00"
     description: A NGINX Docker Community based Helm chart for Kubernetes
     digest: 653b11d9fc27c423c3207705c4eacce88ba55a1fa4824feeb0b7618548bc3f88
     home: https://github.com/Mirantis/helm-charts
@@ -29,7 +51,7 @@ entries:
   vsphere-csi-driver:
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2024-10-02T15:38:57.426806287-05:00"
+    created: "2024-10-21T14:49:38.994758309-05:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 76d353ef3231092e5f954c20d673b3509c97d6e962efcc91592ab01d92cf09e3
     name: vsphere-csi-driver
@@ -39,7 +61,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2024-10-02T15:38:57.425296937-05:00"
+    created: "2024-10-21T14:49:38.994339546-05:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 2c5050ad7a822d8d0eee3f54aaf6524f82d9787efaaeb1ba679cfd8898389893
     name: vsphere-csi-driver
@@ -47,4 +69,4 @@ entries:
     urls:
     - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.1.tgz
     version: 0.0.1
-generated: "2024-10-02T15:38:57.400434036-05:00"
+generated: "2024-10-21T14:49:38.993006351-05:00"
