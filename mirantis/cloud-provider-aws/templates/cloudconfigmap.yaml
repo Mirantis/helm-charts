@@ -1,0 +1,10 @@
+{{- if .Values.kubernetesClusterID }}
+apiVersion: v1
+data:
+  cloudconfig.cfg: |-
+    [Global]
+    KubernetesClusterID = {{ .Values.kubernetesClusterID }}
+kind: ConfigMap
+metadata:
+  name: aws-cloud-config
+{{- end }}
