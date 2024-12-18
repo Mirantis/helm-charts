@@ -1,9 +1,16 @@
-{{- if .Values.kubernetesClusterID }}
+---
+{{- if .Values.cloudConfig.enabled }}
 apiVersion: v1
 data:
-  cloudconfig.cfg: |-
-    [Global]
-    KubernetesClusterID = {{ .Values.kubernetesClusterID }}
+  cloudconfig.cfg: |
+    {{- range $key, $value := .Values.cloudConfig }}
+    {{- if not (eq $key "enabled") }}
+    [{{ camelcase $key }}]
+      {{- range $subKey, $subValue := $value }}
+    {{ $subKey }}={{ $subValue }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
 kind: ConfigMap
 metadata:
   name: aws-cloud-config

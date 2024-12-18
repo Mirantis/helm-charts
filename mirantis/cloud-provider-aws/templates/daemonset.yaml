@@ -36,7 +36,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- $args := .Values.args }}
-          {{- if .Values.kubernetesClusterID }}
+          {{- if and (.Values.cloudConfig.enabled) (not (contains  "--cloud-config" (cat $args))) }}
             {{- $args = append $args "--cloud-config=/etc/cloudconfig.cfg" }}
           {{- end }}
           args:
@@ -48,9 +48,9 @@ spec:
           env: {{- toYaml .Values.env | nindent 12 }}
           securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
-          {{- if or (.Values.kubernetesClusterID) (.Values.extraVolumeMounts) }}
+          {{- if or (.Values.cloudConfig.enabled) (.Values.extraVolumeMounts) }}
           volumeMounts:
-          {{- if .Values.kubernetesClusterID }}
+          {{- if .Values.cloudConfig.enabled }}
             - name: aws-cloud-config
               mountPath: /etc/cloudconfig.cfg
               subPath: cloudconfig.cfg
@@ -59,13 +59,13 @@ spec:
           {{- toYaml .| nindent 12 }}
           {{- end }}
           {{- end }}
-      {{- if or (.Values.kubernetesClusterID) (.Values.extraVolumes) }}
+      {{- if or (.Values.cloudConfig.enabled) (.Values.extraVolumes) }}
       volumes:
       {{- with .Values.extraVolumes}}
       {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- end }}
-      {{- if .Values.kubernetesClusterID }}
+      {{- if .Values.cloudConfig.enabled  }}
         - name: aws-cloud-config
           configMap:
             name: aws-cloud-config

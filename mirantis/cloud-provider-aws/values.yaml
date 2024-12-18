@@ -139,4 +139,5 @@ roleName: extension-apiserver-authentication-reader
 extraVolumes: []
 extraVolumeMounts: []
 
-kubernetesClusterID: {}
+cloudConfig:
+  enabled: false
