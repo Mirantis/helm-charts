@@ -13,5 +13,5 @@ data:
     {{- end }}
 kind: ConfigMap
 metadata:
-  name: {{ template "aws-cloud-config.name" . }}
+  name: {{- include "aws-cloud-config.name" . | nindent 4 }}
 {{- end }}

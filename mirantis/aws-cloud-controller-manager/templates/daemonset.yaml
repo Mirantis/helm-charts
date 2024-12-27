@@ -51,7 +51,7 @@ spec:
           {{- if or (.Values.cloudConfig.enabled) (.Values.extraVolumeMounts) }}
           volumeMounts:
           {{- if .Values.cloudConfig.enabled }}
-            - name: {{ template "aws-cloud-config.name" . }}
+            - name: {{ include "aws-cloud-config.name" . | nindent 16 }}
               mountPath: /etc/cloudconfig.cfg
               subPath: cloudconfig.cfg
           {{- end }}
@@ -66,8 +66,8 @@ spec:
       {{- end }}
       {{- end }}
       {{- if .Values.cloudConfig.enabled  }}
-        - name: {{ template "aws-cloud-config.name" . }}
+        - name: {{- include "aws-cloud-config.name" . | nindent 12 }}
           configMap:
-            name: {{ template "aws-cloud-config.name" . }}
+            name: {{- include "aws-cloud-config.name" . | nindent 16 }}
       {{- end }}
 ---
