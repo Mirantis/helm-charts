@@ -66,8 +66,8 @@ spec:
       {{- end }}
       {{- end }}
       {{- if .Values.cloudConfig.enabled  }}
-        - name: {{- include "aws-cloud-config.name" . }}
+        - name: {{ include "aws-cloud-config.name" . }}
           configMap:
-            name: {{- include "aws-cloud-config.name" . }}
+            name: {{ include "aws-cloud-config.name" . }}
       {{- end }}
 ---
