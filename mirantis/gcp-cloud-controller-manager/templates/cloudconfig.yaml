@@ -1,0 +1,10 @@
+{{- if .Values.cloudConfig.enabled }}
+apiVersion: v1
+data:
+  cloud-config: {{ .Values.cloudConfig.data }}
+kind: Secret
+metadata:
+  name: {{ include "cloud-config-secret.name" . }}
+  namespace: kube-system
+type: Opaque
+{{- end }}
