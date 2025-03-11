@@ -5,6 +5,7 @@ data:
 kind: Secret
 metadata:
   name: {{ include "cloud-config-secret.name" . }}
-  namespace: kube-system
+  labels:
+    {{- include "gcp-ccm.labels" . | nindent 4 }}
 type: Opaque
 {{- end }}

@@ -13,8 +13,7 @@ image:
   repository: gcr.io/k8s-staging-cloud-provider-gcp/cloud-controller-manager
   tag: v32.2.3
 
-# nameOverride overrides `cloud-controller-manager.fullname`
-nameOverride: "gcp-cloud-controller-manager"
+nameOverride: ""
 
 # nodeSelector -- Node labels for pod assignment. Ref: https://kubernetes.io/docs/user-guide/node-selection/.
 nodeSelector: null
@@ -51,6 +50,13 @@ tolerations:
 # dnsPolicy -- dnsPolicy of deamonset pods. Should be set to Default if deployed as a deamonset on control-plane nodes to resolve properly
 dnsPolicy: Default
 
+cloudNodeControllerRoleName: system:controller:cloud-node-controller
+cloudControllerManagerRoleName: system:cloud-controller-manager
+leaderLockingRoleName: system::leader-locking-cloud-controller-manager
+
+apiServerAuthRoleBindingName: cloud-controller-manager:apiserver-authentication-reader
+apiServerAuthRoleName: extension-apiserver-authentication-reader
+
 serviceAccountName: cloud-controller-manager
 
 extraVolumes: []
@@ -60,7 +66,7 @@ securePort: 10258
 
 cloudConfig:
   enabled: false
-  data: Cg== # base64-encoded cloud config
+  data: "" # base64-encoded cloud config
 
 cloudCredentials:
   secretName: gcp-cloud-sa

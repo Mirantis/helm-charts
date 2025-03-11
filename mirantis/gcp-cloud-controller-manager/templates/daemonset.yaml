@@ -2,13 +2,14 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ template "cloud-controller-manager.name" . }}
-  namespace: kube-system
   labels:
     component: {{ template "cloud-controller-manager.name" . }}
+    {{- include "gcp-ccm.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
       component: {{ template "cloud-controller-manager.name" . }}
+      {{- include "gcp-ccm.selectorLabels" . | nindent 6 }}
   updateStrategy:
     type: RollingUpdate
   template:
@@ -20,6 +21,7 @@ spec:
       labels:
         tier: control-plane
         component: {{ template "cloud-controller-manager.name" . }}
+        {{- include "gcp-ccm.selectorLabels" . | nindent 8 }}
     spec:
       tolerations: {{ toYaml ( .Values.tolerations | default .Values.tolerations ) | nindent 8 }}
       nodeSelector: {{ toYaml ( .Values.nodeSelector | default .Values.nodeSelector ) | nindent 8 }}
