@@ -1,0 +1,114 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: {{ template "csi-node.name" . }}
+  labels: {{- include "gcp-csi.labels" . | nindent 4 }}
+    component: {{ template "csi-node.name" . }}
+spec:
+  selector:
+    matchLabels: {{- include "gcp-csi.selectorLabels" . | nindent 6 }}
+      component: {{ template "csi-node.name" . }}
+  template:
+    metadata:
+      {{- if .Values.node.podAnnotations }}
+      annotations:
+      {{- toYaml .Values.node.podAnnotations | nindent 8 }}
+      {{- end }}
+      labels: {{- include "gcp-csi.selectorLabels" . | nindent 8 }}
+        component: {{ template "csi-node.name" . }}
+    spec:
+      tolerations: {{ toYaml ( .Values.node.tolerations | default .Values.node.tolerations ) | nindent 8 }}
+      nodeSelector: {{ toYaml ( .Values.node.nodeSelector | default .Values.node.nodeSelector ) | nindent 8 }}
+      hostNetwork: true
+      serviceAccountName: {{ .Values.node.serviceAccountName }}
+      priorityClassName:  {{ .Values.node.priorityClass.name }}
+      securityContext: {{- toYaml .Values.node.podSecurityContext | nindent 8 }}
+      containers:
+        - name: csi-driver-registrar
+          image: {{ .Values.node.registrar.image.repository }}:{{ .Values.node.registrar.image.tag }}
+          {{- $args := .Values.node.registrar.args }}
+          {{- if not (has "kubelet-registration-path" $args) }}
+          {{- $args = append $args (printf "--kubelet-registration-path=%s/plugins/pd.csi.storage.gke.io/csi.sock" .Values.node.kubeletPath) }}
+          {{- end }}
+          args:
+            {{- range $args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /csi
+            - name: registration-dir
+              mountPath: /registration
+        - name: gce-pd-driver
+          image: {{ .Values.node.driver.image.repository }}:{{ .Values.node.driver.image.tag }}
+          args:
+            {{- range .Values.node.driver.args }}
+            - {{ . }}
+            {{- end }}
+          securityContext:
+            privileged: true
+          env:
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: kubelet-dir
+              mountPath: {{ .Values.node.kubeletPath }}
+              mountPropagation: "Bidirectional"
+            - name: plugin-dir
+              mountPath: /csi
+            - name: device-dir
+              mountPath: /dev
+            - name: udev-rules-etc
+              mountPath: /etc/udev
+            - name: udev-rules-lib
+              mountPath: /lib/udev
+            - name: udev-socket
+              mountPath: /run/udev
+            - name: sys
+              mountPath: /sys
+            - name: lib-modules
+              mountPath: /lib/modules
+      volumes:
+        - name: registration-dir
+          hostPath:
+            path: {{ .Values.node.kubeletPath }}/plugins_registry/
+            type: Directory
+        - name: kubelet-dir
+          hostPath:
+            path: {{ .Values.node.kubeletPath }}
+            type: Directory
+        - name: plugin-dir
+          hostPath:
+            path: {{ .Values.node.kubeletPath }}/plugins/pd.csi.storage.gke.io/
+            type: DirectoryOrCreate
+        - name: device-dir
+          hostPath:
+            path: /dev
+            type: Directory
+        - name: udev-rules-etc
+          hostPath:
+            path: /etc/udev
+            type: Directory
+        - name: udev-rules-lib
+          hostPath:
+            path: /lib/udev
+            type: Directory
+        - name: udev-socket
+          hostPath:
+            path: /run/udev
+            type: Directory
+        - name: sys
+          hostPath:
+            path: /sys
+            type: Directory
+        - name: lib-modules
+          hostPath:
+            path: /lib/modules
+            type: Directory

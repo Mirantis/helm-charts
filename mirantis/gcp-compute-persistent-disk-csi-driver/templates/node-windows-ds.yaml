@@ -1,0 +1,103 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: {{ template "csi-node-win.name" . }}
+  labels: {{- include "gcp-csi.labels" . | nindent 4 }}
+    component: {{ template "csi-node-win.name" . }}
+spec:
+  selector:
+    matchLabels: {{- include "gcp-csi.selectorLabels" . | nindent 6 }}
+      component: {{ template "csi-node-win.name" . }}
+  template:
+    metadata:
+      {{- if .Values.nodeWin.podAnnotations }}
+      annotations:
+      {{- toYaml .Values.nodeWin.podAnnotations | nindent 8 }}
+      {{- end }}
+      labels:  {{- include "gcp-csi.selectorLabels" . | nindent 8 }}
+        component: {{ template "csi-node-win.name" . }}
+    spec:
+      tolerations: {{ toYaml ( .Values.nodeWin.tolerations | default .Values.nodeWin.tolerations ) | nindent 8 }}
+      nodeSelector: {{ toYaml ( .Values.nodeWin.nodeSelector | default .Values.nodeWin.nodeSelector ) | nindent 8 }}
+      hostNetwork: true
+      serviceAccountName: {{ .Values.nodeWin.serviceAccountName }}
+      priorityClassName:  {{ .Values.node.priorityClass.name }}
+      securityContext: {{- toYaml .Values.nodeWin.podSecurityContext | nindent 8 }}
+      containers:
+        - name: csi-driver-registrar
+          image: {{ .Values.nodeWin.registrar.image.repository }}:{{ .Values.nodeWin.registrar.image.tag }}
+          args:
+            {{- range .Values.nodeWin.registrar.args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /csi
+            - name: registration-dir
+              mountPath: /registration
+        - name: gce-pd-driver
+          image: {{ .Values.nodeWin.driver.image.repository }}:{{ .Values.nodeWin.driver.image.tag }}
+          args:
+            {{- range .Values.nodeWin.driver.args }}
+            - {{ . }}
+            {{- end }}
+          volumeMounts:
+            - name: kubelet-dir
+              mountPath: C:\var\lib\kubelet
+              mountPropagation: "None"
+            - name: plugin-dir
+              mountPath: C:\csi
+            - name: csi-proxy-volume-v1
+              mountPath: \\.\pipe\csi-proxy-volume-v1
+            - name: csi-proxy-filesystem-v1
+              mountPath: \\.\pipe\csi-proxy-filesystem-v1
+            - name: csi-proxy-disk-v1
+              mountPath: \\.\pipe\csi-proxy-disk-v1
+            - name: csi-proxy-volume-v1beta1
+              mountPath: \\.\pipe\csi-proxy-volume-v1beta1
+            - name: csi-proxy-filesystem-v1beta1
+              mountPath: \\.\pipe\csi-proxy-filesystem-v1beta1
+            - name: csi-proxy-disk-v1beta2
+              mountPath: \\.\pipe\csi-proxy-disk-v1beta2
+      volumes:
+        - name: csi-proxy-disk-v1
+          hostPath:
+            path: \\.\pipe\csi-proxy-disk-v1
+            type: ""
+        - name: csi-proxy-volume-v1
+          hostPath:
+            path: \\.\pipe\csi-proxy-volume-v1
+            type: ""
+        - name: csi-proxy-filesystem-v1
+          hostPath:
+            path: \\.\pipe\csi-proxy-filesystem-v1
+            type: ""
+        - name: csi-proxy-disk-v1beta2
+          hostPath:
+            path: \\.\pipe\csi-proxy-disk-v1beta2
+            type: ""
+        - name: csi-proxy-volume-v1beta1
+          hostPath:
+            path: \\.\pipe\csi-proxy-volume-v1beta1
+            type: ""
+        - name: csi-proxy-filesystem-v1beta1
+          hostPath:
+            path: \\.\pipe\csi-proxy-filesystem-v1beta1
+            type: ""
+        - name: registration-dir
+          hostPath:
+            path: \var\lib\kubelet\plugins_registry
+            type: Directory
+        - name: kubelet-dir
+          hostPath:
+            path: \var\lib\kubelet
+            type: Directory
+        - name: plugin-dir
+          hostPath:
+            path: \var\lib\kubelet\plugins\pd.csi.storage.gke.io
+            type: DirectoryOrCreate
