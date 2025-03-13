@@ -73,7 +73,6 @@ metadata:
   name: {{ include "vsphere-csi-driver.controller.fullname" . }}-controller-rolebinding
   labels:
     {{- include "vsphere-csi-driver.labels" . | nindent 4 }}
-  name: vsphere-csi-controller-binding
 subjects:
   - kind: ServiceAccount
     name: {{ include "vsphere-csi-driver.controller.serviceAccountName" . }}
