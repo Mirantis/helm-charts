@@ -1,0 +1,31 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.leaderLockingRoleName }}
+  labels: {{- include "gcp-ccm.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Values.leaderLockingRoleName }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.apiServerAuthRoleBindingName }}
+  # The namespace is set to `kube-system` because the API server authentication ConfigMap
+  # is stored specifically in the `kube-system` namespace
+  namespace: kube-system
+  labels: {{- include "gcp-ccm.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Values.apiServerAuthRoleName }}
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Release.Namespace }}

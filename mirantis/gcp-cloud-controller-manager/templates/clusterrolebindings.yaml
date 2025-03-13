@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.cloudNodeControllerRoleName }}
+  labels: {{- include "gcp-ccm.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.cloudNodeControllerRoleName }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.cloudControllerManagerRoleName }}
+  labels: {{- include "gcp-ccm.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.cloudControllerManagerRoleName }}
+subjects:
+- kind: ServiceAccount
+  apiGroup: ""
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Release.Namespace }}

@@ -1,0 +1,10 @@
+{{- if .Values.cloudConfig.enabled }}
+apiVersion: v1
+data:
+  cloud-config: {{ .Values.cloudConfig.data }}
+kind: Secret
+metadata:
+  name: {{ include "cloud-config-secret.name" . }}
+  labels: {{- include "gcp-ccm.labels" . | nindent 4 }}
+type: Opaque
+{{- end }}
