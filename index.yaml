@@ -3,7 +3,7 @@ entries:
   aws-cloud-controller-manager:
   - apiVersion: v1
     appVersion: v1.27.1
-    created: "2025-01-06T16:38:59.712444524-05:00"
+    created: "2025-03-13T14:42:53.991324606-05:00"
     description: Installs Cloud Controller Manager for AWS Cloud Provider
     digest: a5619d1824f0056e4c766eccce397761157f1f68aad177258aabc713845702e8
     maintainers:
@@ -15,7 +15,7 @@ entries:
     version: 0.0.9
   cloud-provider-azure:
   - apiVersion: v1
-    created: "2025-01-06T16:38:59.712929803-05:00"
+    created: "2025-03-13T14:42:53.991793343-05:00"
     description: A Helm chart for installing kubernetes-sigs/cloud-provider-azure
       components
     digest: d96df7019e2d236c012b7f155b982536f3f2abf811bb0241760f7b86bc43ca2b
@@ -40,7 +40,7 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-01-06T16:38:59.713285036-05:00"
+    created: "2025-03-13T14:42:53.992121463-05:00"
     description: A NGINX Docker Community based Helm chart for Kubernetes
     digest: 653b11d9fc27c423c3207705c4eacce88ba55a1fa4824feeb0b7618548bc3f88
     home: https://github.com/Mirantis/helm-charts
@@ -64,7 +64,17 @@ entries:
   vsphere-csi-driver:
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2025-01-06T16:38:59.714346526-05:00"
+    created: "2025-03-13T14:42:53.993416322-05:00"
+    description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
+    digest: 95f5c8d4a19455c981436feba78f964038ff5f6489b2a61c28ba54392d212261
+    name: vsphere-csi-driver
+    type: application
+    urls:
+    - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 3.3.1
+    created: "2025-03-13T14:42:53.992975779-05:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 76d353ef3231092e5f954c20d673b3509c97d6e962efcc91592ab01d92cf09e3
     name: vsphere-csi-driver
@@ -74,7 +84,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2025-01-06T16:38:59.713789141-05:00"
+    created: "2025-03-13T14:42:53.99255341-05:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 2c5050ad7a822d8d0eee3f54aaf6524f82d9787efaaeb1ba679cfd8898389893
     name: vsphere-csi-driver
@@ -82,4 +92,4 @@ entries:
     urls:
     - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.1.tgz
     version: 0.0.1
-generated: "2025-01-06T16:38:59.711822135-05:00"
+generated: "2025-03-13T14:42:53.990629742-05:00"
