@@ -85,7 +85,7 @@ rules:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ .Values.node.deployRoleName }}
+  name: {{ .Values.node.linux.deployRoleName }}
   labels: {{- include "gcp-csi.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]

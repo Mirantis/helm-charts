@@ -26,9 +26,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "csi-node.name" -}}
-{{- .Values.node.nameOverride | default "csi-gce-pd-node" }}
+{{- .Values.node.linux.nameOverride | default "csi-gce-pd-node" }}
 {{- end }}
 
 {{- define "csi-node-win.name" -}}
-{{- .Values.nodeWin.nameOverride | default "csi-gce-pd-node-win" }}
+{{- .Values.node.windows.nameOverride | default "csi-gce-pd-node-win" }}
 {{- end }}

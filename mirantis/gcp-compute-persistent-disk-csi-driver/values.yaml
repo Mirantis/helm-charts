@@ -99,71 +99,74 @@ controller:
 
 
 node:
-  kubeletPath: /var/lib/kubelet
-  nodeSelector:
-    kubernetes.io/os: linux
-  nameOverride: ""
-  podSecurityContext: {}
-  podAnnotations: {}
-  tolerations:
-    - operator: Exists
-
   priorityClass:
     name: csi-gce-pd-node
     value: 900001000
     globalDefault: false
-  serviceAccountName: csi-gce-pd-node-sa
-  roleName: csi-gce-pd-node
-  deployRoleName: csi-gce-pd-node-deploy
 
-  registrar:
-    image:
-      repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
-      tag: v2.9.3
-    args:
-      - "--v=5"
-      - "--csi-address=/csi/csi.sock"
+  linux:
+    enabled: true
+    kubeletPath: /var/lib/kubelet
+    nodeSelector:
+      kubernetes.io/os: linux
+    nameOverride: ""
+    podSecurityContext: {}
+    podAnnotations: {}
+    tolerations:
+      - operator: Exists
 
-  driver:
-    image:
-      repository: registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver
-      tag: v1.15.0
-    args:
-      - "--v=5"
-      - "--endpoint=unix:/csi/csi.sock"
-      - "--run-controller-service=false"
+    serviceAccountName: csi-gce-pd-node-sa
+    roleName: csi-gce-pd-node
+    deployRoleName: csi-gce-pd-node-deploy
 
+    registrar:
+      image:
+        repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
+        tag: v2.9.3
+      args:
+        - "--v=5"
+        - "--csi-address=/csi/csi.sock"
 
-nodeWin:
-  nodeSelector:
-    kubernetes.io/os: windows
-  nameOverride: ""
-  podSecurityContext: {}
-  podAnnotations: {}
-  tolerations:
-    - operator: Exists
+    driver:
+      image:
+        repository: registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver
+        tag: v1.15.0
+      args:
+        - "--v=5"
+        - "--endpoint=unix:/csi/csi.sock"
+        - "--run-controller-service=false"
 
-  serviceAccountName: csi-gce-pd-node-win-sa
-  roleName: csi-gce-pd-node-win
-  deployRoleName: csi-gce-pd-node-deploy-win
+  windows:
+    enabled: true
+    nodeSelector:
+      kubernetes.io/os: windows
+    nameOverride: ""
+    podSecurityContext: {}
+    podAnnotations: {}
+    tolerations:
+      - operator: Exists
 
-  registrar:
-    image:
-      repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
-      tag: v2.9.3
-    args:
-      - "--v=5"
-      - "--csi-address=unix://C:\\csi\\csi.sock"
-      - "--kubelet-registration-path=C:\\var\\lib\\kubelet\\plugins\\pd.csi.storage.gke.io\\csi.sock"
+    serviceAccountName: csi-gce-pd-node-win-sa
+    roleName: csi-gce-pd-node-win
+    deployRoleName: csi-gce-pd-node-deploy-win
 
-  driver:
-    image:
-      repository: registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver
-      tag: v1.15.0
-    args:
-      - "--v=5"
-      - "--endpoint=unix:/csi/csi.sock"
-      - "--run-controller-service=false"
+    registrar:
+      image:
+        repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
+        tag: v2.9.3
+      args:
+        - "--v=5"
+        - "--csi-address=unix://C:\\csi\\csi.sock"
+        - "--kubelet-registration-path=C:\\var\\lib\\kubelet\\plugins\\pd.csi.storage.gke.io\\csi.sock"
+
+    driver:
+      image:
+        repository: registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver
+        tag: v1.15.0
+      args:
+        - "--v=5"
+        - "--endpoint=unix:/csi/csi.sock"
+        - "--run-controller-service=false"
 
 cloudCredentials:
   secretName: gcp-cloud-sa
