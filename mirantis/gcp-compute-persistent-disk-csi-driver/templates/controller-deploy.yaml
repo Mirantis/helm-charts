@@ -1,0 +1,169 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ template "csi-controller.name" . }}
+  labels: {{- include "gcp-csi.labels" . | nindent 4 }}
+    component: {{ template "csi-controller.name" . }}
+spec:
+  replicas: {{ .Values.controller.replicas }}
+  selector:
+    matchLabels: {{- include "gcp-csi.selectorLabels" . | nindent 6 }}
+      component: {{ template "csi-controller.name" . }}
+  template:
+    metadata:
+      {{- if .Values.controller.podAnnotations }}
+      annotations:
+      {{- toYaml .Values.controller.podAnnotations | nindent 8 }}
+      {{- end }}
+      labels: {{- include "gcp-csi.selectorLabels" . | nindent 8 }}
+        component: {{ template "csi-controller.name" . }}
+    spec:
+      tolerations: {{ toYaml ( .Values.controller.tolerations | default .Values.controller.tolerations ) | nindent 8 }}
+      nodeSelector: {{ toYaml ( .Values.controller.nodeSelector | default .Values.controller.nodeSelector ) | nindent 8 }}
+      hostNetwork: true
+      serviceAccountName: {{ .Values.controller.serviceAccountName }}
+      priorityClassName: {{ .Values.controller.priorityClass.name }}
+      securityContext: {{- toYaml .Values.controller.podSecurityContext | nindent 8 }}
+      containers:
+        - name: csi-provisioner
+          image: {{ .Values.controller.provisioner.image.repository }}:{{ .Values.controller.provisioner.image.tag }}
+          {{- $args := .Values.controller.provisioner.args }}
+          {{- if not (has "--http-endpoint" $args) }}
+          {{- $args = append $args (printf "--http-endpoint=:%d" (int .Values.controller.provisioner.port)) }}
+          {{- end }}
+          {{- if not (has "--leader-election-namespace" $args) }}
+          {{- $args = append $args "--leader-election-namespace=$(PDCSI_NAMESPACE)" }}
+          {{- end }}
+          args:
+            {{- range $args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: PDCSI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: {{ .Values.controller.provisioner.port }}
+              name: http-endpoint
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /healthz/leader-election
+              port: http-endpoint
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 20
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: csi-attacher
+          image: {{ .Values.controller.attacher.image.repository }}:{{ .Values.controller.attacher.image.tag }}
+          {{- $args := .Values.controller.attacher.args }}
+          {{- if not (has "--http-endpoint" $args) }}
+          {{- $args = append $args (printf "--http-endpoint=:%d" (int .Values.controller.attacher.port)) }}
+          {{- end }}
+          {{- if not (has "--leader-election-namespace" $args) }}
+          {{- $args = append $args "--leader-election-namespace=$(PDCSI_NAMESPACE)" }}
+          {{- end }}
+          args:
+            {{- range $args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: PDCSI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: {{ .Values.controller.attacher.port }}
+              name: http-endpoint
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /healthz/leader-election
+              port: http-endpoint
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 20
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: csi-resizer
+          image: {{ .Values.controller.resizer.image.repository }}:{{ .Values.controller.resizer.image.tag }}
+          {{- $args := .Values.controller.resizer.args }}
+          {{- if not (has "--http-endpoint" $args) }}
+          {{- $args = append $args (printf "--http-endpoint=:%d" (int .Values.controller.resizer.port)) }}
+          {{- end }}
+          {{- if not (has "--leader-election-namespace" $args) }}
+          {{- $args = append $args "--leader-election-namespace=$(PDCSI_NAMESPACE)" }}
+          {{- end }}
+          args:
+            {{- range $args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: PDCSI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: {{ .Values.controller.resizer.port }}
+              name: http-endpoint
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /healthz/leader-election
+              port: http-endpoint
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 20
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: csi-snapshotter
+          image: {{ .Values.controller.snapshotter.image.repository }}:{{ .Values.controller.snapshotter.image.tag }}
+          {{- $args := .Values.controller.snapshotter.args }}
+          {{- if not (has "--http-endpoint" $args) }}
+          {{- $args = append $args (printf "--http-endpoint=:%d" (int .Values.controller.snapshotter.port)) }}
+          {{- end }}
+          {{- if not (has "--leader-election-namespace" $args) }}
+          {{- $args = append $args "--leader-election-namespace=$(PDCSI_NAMESPACE)" }}
+          {{- end }}
+          args:
+            {{- range $args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: PDCSI_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: gce-pd-driver
+          image: {{ .Values.controller.driver.image.repository }}:{{ .Values.controller.driver.image.tag }}
+          args:
+            {{- range .Values.controller.driver.args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+            - name: gcp-cloud-credentials
+              readOnly: true
+              mountPath: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}
+              subPath: {{ .Values.cloudCredentials.secretKey }}
+      volumes:
+        - name: socket-dir
+          emptyDir: {}
+        - name: gcp-cloud-credentials
+          secret:
+            secretName: {{ .Values.cloudCredentials.secretName }}

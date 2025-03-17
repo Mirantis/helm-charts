@@ -1,0 +1,17 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ .Values.controller.priorityClass.name }}
+  labels: {{- include "gcp-csi.labels" . | nindent 4 }}
+value: {{ (int .Values.controller.priorityClass.value) }}
+globalDefault: {{ .Values.controller.priorityClass.globalDefault }}
+description: "This priority class should be used for the GCE PD CSI driver controller deployment only."
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ .Values.node.priorityClass.name }}
+  labels: {{- include "gcp-csi.labels" . | nindent 4 }}
+value: {{ (int .Values.node.priorityClass.value) }}
+globalDefault: {{ .Values.node.priorityClass.globalDefault }}
+description: "This priority class should be used for the GCE PD CSI driver node deployment only."
