@@ -9,4 +9,5 @@ metadata:
 provisioner: pd.csi.storage.gke.io
 parameters:
   type: pd-standard
+volumeBindingMode: WaitForFirstConsumer
 {{- end }}
