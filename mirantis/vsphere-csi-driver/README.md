@@ -2,7 +2,7 @@
 
 A Helm chart for Container Storage Interface (CSI) driver for vSphere
 
-This chart is based on the official [vsphere csi driver vanilla manifest](https://github.com/kubernetes-sigs/vsphere-csi-driver/blob/master/manifests/vanilla/vsphere-csi-driver.yaml).
+This chart is based on the official [vsphere csi driver vanilla manifest](https://github.com/kubernetes-sigs/vsphere-csi-driver/blob/v3.7.0/manifests/vanilla/vsphere-csi-driver.yaml).
 
 The default storage class can be created via `defaultStorageClass.enabled`
 option.
@@ -24,21 +24,21 @@ values under `vcenterConfig`.
 | defaultStorageClass.enabled              | bool   | `false`                                                   | Create default storage class                                                       |
 | defaultStorageClass.name                 | string | `"vsphere-csi"`                                           | Name of the default storage class                                                  |
 | images.csiAttacher.repo                  | string | `"registry.k8s.io/sig-storage/csi-attacher"`              | Repo for the CSI attacher                                                          |
-| images.csiAttacher.tag                   | string | `"v4.5.1"`                                                | Tag for the CSI attacher                                                           |
+| images.csiAttacher.tag                   | string | `"v4.9.0"`                                                | Tag for the CSI attacher                                                           |
 | images.csiProvisioner.repo               | string | `"registry.k8s.io/sig-storage/csi-provisioner"`           | Repo for the CSI provisioner                                                       |
 | images.csiProvisioner.tag                | string | `"v4.0.1"`                                                | Tag for the CSI provisioner                                                        |
 | images.csiResizer.repo                   | string | `"registry.k8s.io/sig-storage/csi-resizer"`               | Repo for the CSI resizer                                                           |
-| images.csiResizer.tag                    | string | `"v1.10.1"`                                               | Tag for the CSI resizer                                                            |
+| images.csiResizer.tag                    | string | `"v1.12.0"`                                               | Tag for the CSI resizer                                                            |
 | images.csiSnapshotter.repo               | string | `"registry.k8s.io/sig-storage/csi-snapshotter"`           | Repo for the CSI snapshotter                                                       |
-| images.csiSnapshotter.tag                | string | `"v7.0.2"`                                                | Tag for the CSI snapshotter                                                        |
+| images.csiSnapshotter.tag                | string | `"v8.2.0"`                                                | Tag for the CSI snapshotter                                                        |
 | images.driver.repo                       | string | `"registry.k8s.io/csi-vsphere/driver"`                    | Repo for the vcenter CSI provider driver                                           |
-| images.driver.tag                        | string | `"v3.3.1"`                                                | Tag for the vcenter CSI provider driver                                            |
+| images.driver.tag                        | string | `"v3.7.0"`                                                | Tag for the vcenter CSI provider driver                                            |
 | images.livenessProbe.repo                | string | `"registry.k8s.io/sig-storage/livenessprobe"`             | Repo for the livenessprobe                                                         |
-| images.livenessProbe.tag                 | string | `"v2.12.0"`                                               | Tag for the livenessprobe                                                          |
+| images.livenessProbe.tag                 | string | `"v2.15.0"`                                               | Tag for the livenessprobe                                                          |
 | images.nodeDriverRegistrar.repo          | string | `"registry.k8s.io/sig-storage/csi-node-driver-registrar"` | Repo for the CSI driver registrar                                                  |
-| images.nodeDriverRegistrar.tag           | string | `"v2.10.1"`                                               | Tag for the CSI driver registrar                                                   |
+| images.nodeDriverRegistrar.tag           | string | `"v2.13.0"`                                               | Tag for the CSI driver registrar                                                   |
 | images.syncer.repo                       | string | `"registry.k8s.io/csi-vsphere/syncer"`                   | Repo for the vcenter CSI provider syncer                                           |
-| images.syncer.tag                        | string | `"v3.3.1"`                                                | Tag for the vcenter CSI provider syncer                                            |
+| images.syncer.tag                        | string | `"v3.7.0"`                                                | Tag for the vcenter CSI provider syncer                                            |
 | node.kubeletPath                         | string | `"/var/lib/kubelet"`                                      | Kubelet path on the node                                                           |
 | node.tolerations                         | map    |                                                           | Node provisioner tolerations                                                       |
 | vcenterConfig.clusterID                  | string | `""`                                                      | The unique cluster identifier                                                      |

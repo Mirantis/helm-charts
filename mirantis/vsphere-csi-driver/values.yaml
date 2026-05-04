@@ -56,28 +56,28 @@ vcenterConfig:
 images:
   driver:
     repo: registry.k8s.io/csi-vsphere/driver
-    tag: v3.3.1
+    tag: v3.7.0
   syncer:
     repo: registry.k8s.io/csi-vsphere/syncer
-    tag: v3.3.1
+    tag: v3.7.0
   nodeDriverRegistrar:
     repo: registry.k8s.io/sig-storage/csi-node-driver-registrar
-    tag: v2.10.1
+    tag: v2.13.0
   csiAttacher:
     repo: registry.k8s.io/sig-storage/csi-attacher
-    tag: v4.5.1
+    tag: v4.9.0
   csiResizer:
     repo: registry.k8s.io/sig-storage/csi-resizer
-    tag: v1.10.1
+    tag: v1.12.0
   csiProvisioner:
     repo: registry.k8s.io/sig-storage/csi-provisioner
     tag: v4.0.1
   csiSnapshotter:
     repo:  registry.k8s.io/sig-storage/csi-snapshotter
-    tag: v7.0.2
+    tag: v8.2.0
   livenessProbe:
     repo: registry.k8s.io/sig-storage/livenessprobe
-    tag: v2.12.0
+    tag: v2.15.0
 
 defaultStorageClass:
   enabled: false
