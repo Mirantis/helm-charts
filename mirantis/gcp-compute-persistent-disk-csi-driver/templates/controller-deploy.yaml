@@ -147,6 +147,12 @@ spec:
               mountPath: /csi
         - name: gce-pd-driver
           image: {{ .Values.controller.driver.image.repository }}:{{ .Values.controller.driver.image.tag }}
+          {{- with .Values.controller.driver.command }}
+          command:
+            {{- range . }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
           args:
             {{- range .Values.controller.driver.args }}
             - {{ . }}
@@ -157,6 +163,30 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /csi
+            - name: gcp-cloud-credentials
+              readOnly: true
+              mountPath: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}
+              subPath: {{ .Values.cloudCredentials.secretKey }}
+        - name: taint-controller
+          image: {{ .Values.controller.tainter.image.repository }}:{{ .Values.controller.tainter.image.tag }}
+          {{- with .Values.controller.tainter.command }}
+          command:
+            {{- range . }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
+          args:
+            {{- range .Values.controller.tainter.args }}
+            - {{ . }}
+            {{- end }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}
+          ports:
+            - containerPort: {{ .Values.controller.tainter.port }}
+              name: metrics-taint
+              protocol: TCP
+          volumeMounts:
             - name: gcp-cloud-credentials
               readOnly: true
               mountPath: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}

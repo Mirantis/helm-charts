@@ -59,8 +59,11 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
           volumeMounts:
-            - name: kubelet-dir
-              mountPath: {{ .Values.node.linux.kubeletPath }}
+            - name: kubelet-plugin-dir
+              mountPath: {{ .Values.node.linux.kubeletPath }}/plugins/kubernetes.io/csi
+              mountPropagation: "Bidirectional"
+            - name: kubelet-pods
+              mountPath: {{ .Values.node.linux.kubeletPath }}/pods
               mountPropagation: "Bidirectional"
             - name: plugin-dir
               mountPath: /csi
@@ -76,15 +79,19 @@ spec:
               mountPath: /sys
             - name: lib-modules
               mountPath: /lib/modules
+              readOnly: true
       volumes:
         - name: registration-dir
           hostPath:
             path: {{ .Values.node.linux.kubeletPath }}/plugins_registry/
             type: Directory
-        - name: kubelet-dir
+        - name: kubelet-pods
           hostPath:
-            path: {{ .Values.node.linux.kubeletPath }}
-            type: Directory
+            path: {{ .Values.node.linux.kubeletPath }}/pods
+        - name: kubelet-plugin-dir
+          hostPath:
+            path: {{ .Values.node.linux.kubeletPath }}/plugins/kubernetes.io/csi
+            type: DirectoryOrCreate
         - name: plugin-dir
           hostPath:
             path: {{ .Values.node.linux.kubeletPath }}/plugins/pd.csi.storage.gke.io/
