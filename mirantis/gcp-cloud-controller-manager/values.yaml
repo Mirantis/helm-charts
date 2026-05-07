@@ -11,7 +11,7 @@ clusterCIDR: 192.168.0.0/16
 image:
   pullPolicy: IfNotPresent
   repository: gcr.io/k8s-staging-cloud-provider-gcp/cloud-controller-manager
-  tag: v32.2.3
+  tag: v36.0.0
 
 nameOverride: ""
 
