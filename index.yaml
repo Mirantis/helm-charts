@@ -2,8 +2,20 @@ apiVersion: v1
 entries:
   aws-cloud-controller-manager:
   - apiVersion: v1
+    appVersion: v1.34.0
+    created: "2026-05-07T12:13:16.368586513-06:00"
+    description: Installs Cloud Controller Manager for AWS Cloud Provider
+    digest: 4a2f48f037f9e7fa45fbed769eff8fd7897c84bee1bcb30119b3408330b0828a
+    maintainers:
+    - email: nic@amazon.com
+      name: Nick Turner
+    name: aws-cloud-controller-manager
+    urls:
+    - https://charts.mirantis.com/charts/aws-cloud-controller-manager-0.0.11.tgz
+    version: 0.0.11
+  - apiVersion: v1
     appVersion: v1.27.1
-    created: "2025-03-18T10:02:17.564657323-05:00"
+    created: "2026-05-07T12:13:16.36919832-06:00"
     description: Installs Cloud Controller Manager for AWS Cloud Provider
     digest: a5619d1824f0056e4c766eccce397761157f1f68aad177258aabc713845702e8
     maintainers:
@@ -15,7 +27,28 @@ entries:
     version: 0.0.9
   cloud-provider-azure:
   - apiVersion: v1
-    created: "2025-03-18T10:02:17.565135783-05:00"
+    created: "2026-05-07T12:13:16.370240102-06:00"
+    description: A Helm chart for installing kubernetes-sigs/cloud-provider-azure
+      components
+    digest: 0c0e2cbc1971d956590ebd99a0acc1f9fcbc4bc2ecb623b13250427d4e6d986f
+    home: https://raw.githubusercontent.com/kubernetes-sigs/cloud-provider-azure/master/helm/cloud-provider-azure/README.md
+    keywords:
+    - cloud-provider-azure
+    - kubernetes-sigs
+    - kubernetes
+    maintainers:
+    - email: jackfrancis@gmail.com
+      name: Jack Francis
+    - email: zhechengli1995@outlook.com
+      name: Zhecheng Li
+    name: cloud-provider-azure
+    sources:
+    - https://github.com/kubernetes-sigs/cloud-provider-azure
+    urls:
+    - https://charts.mirantis.com/charts/cloud-provider-azure-1.34.6.tgz
+    version: 1.34.6
+  - apiVersion: v1
+    created: "2026-05-07T12:13:16.369771614-06:00"
     description: A Helm chart for installing kubernetes-sigs/cloud-provider-azure
       components
     digest: d96df7019e2d236c012b7f155b982536f3f2abf811bb0241760f7b86bc43ca2b
@@ -37,8 +70,18 @@ entries:
     version: 1.31.2
   gcp-cloud-controller-manager:
   - apiVersion: v2
+    appVersion: v36.0.0
+    created: "2026-05-07T12:13:16.370816793-06:00"
+    description: A Helm chart for the GCP Cloud Controller Manager
+    digest: 6925e4a322294d141ac29d773535cc69bc5210ff7406543b87822448454492ad
+    name: gcp-cloud-controller-manager
+    type: application
+    urls:
+    - https://charts.mirantis.com/charts/gcp-cloud-controller-manager-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     appVersion: v32.2.3
-    created: "2025-03-18T10:02:17.565467023-05:00"
+    created: "2026-05-07T12:13:16.370519456-06:00"
     description: A Helm chart for the GCP Cloud Controller Manager
     digest: b068336d2dacc9534c95657e3ed77dbf277bb49713b83e1189e8b8170cb91ec2
     name: gcp-cloud-controller-manager
@@ -48,8 +91,18 @@ entries:
     version: 0.0.1
   gcp-compute-persistent-disk-csi-driver:
   - apiVersion: v2
+    appVersion: v1.25.1
+    created: "2026-05-07T12:13:16.372295064-06:00"
+    description: A Helm chart for the GCP Compute Persistent Disk CSI Driver
+    digest: 5b65253b5f4d5f34f474d739509d3054a8c9b4833e416e6c711b6cb39c78c650
+    name: gcp-compute-persistent-disk-csi-driver
+    type: application
+    urls:
+    - https://charts.mirantis.com/charts/gcp-compute-persistent-disk-csi-driver-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: v1.15.0
-    created: "2025-03-18T10:02:17.566650663-05:00"
+    created: "2026-05-07T12:13:16.371798974-06:00"
     description: A Helm chart for the GCP Compute Persistent Disk CSI Driver
     digest: 17ea1d2408f140a6fe75fe0674e4491cc63f5d555dc27f7d8d32781ece4af798
     name: gcp-compute-persistent-disk-csi-driver
@@ -59,7 +112,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: v1.15.0
-    created: "2025-03-18T10:02:17.566056303-05:00"
+    created: "2026-05-07T12:13:16.371325266-06:00"
     description: A Helm chart for the GCP Compute Persistent Disk CSI Driver
     digest: c8b0745f0d12edae47998408caf134d5c711577730a974c2da5a8ecec7cea239
     name: gcp-compute-persistent-disk-csi-driver
@@ -72,7 +125,7 @@ entries:
       category: Infrastructure
     apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-03-18T10:02:17.567019725-05:00"
+    created: "2026-05-07T12:13:16.372627687-06:00"
     description: A NGINX Docker Community based Helm chart for Kubernetes
     digest: 653b11d9fc27c423c3207705c4eacce88ba55a1fa4824feeb0b7618548bc3f88
     home: https://github.com/Mirantis/helm-charts
@@ -95,8 +148,18 @@ entries:
     version: 0.1.0
   vsphere-csi-driver:
   - apiVersion: v2
+    appVersion: 3.7.0
+    created: "2026-05-07T12:13:16.375140136-06:00"
+    description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
+    digest: c5c768140cfb195582080d463123d8c7eedd7e73f87621209e5da30df9cc4949
+    name: vsphere-csi-driver
+    type: application
+    urls:
+    - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
     appVersion: 3.3.1
-    created: "2025-03-18T10:02:17.568750495-05:00"
+    created: "2026-05-07T12:13:16.374506278-06:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 95f5c8d4a19455c981436feba78f964038ff5f6489b2a61c28ba54392d212261
     name: vsphere-csi-driver
@@ -106,7 +169,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2025-03-18T10:02:17.568312613-05:00"
+    created: "2026-05-07T12:13:16.373441783-06:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 76d353ef3231092e5f954c20d673b3509c97d6e962efcc91592ab01d92cf09e3
     name: vsphere-csi-driver
@@ -116,7 +179,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 3.3.1
-    created: "2025-03-18T10:02:17.567457607-05:00"
+    created: "2026-05-07T12:13:16.373028478-06:00"
     description: A Helm chart for Container Storage Interface (CSI) driver for vSphere
     digest: 2c5050ad7a822d8d0eee3f54aaf6524f82d9787efaaeb1ba679cfd8898389893
     name: vsphere-csi-driver
@@ -124,4 +187,4 @@ entries:
     urls:
     - https://charts.mirantis.com/charts/vsphere-csi-driver-0.0.1.tgz
     version: 0.0.1
-generated: "2025-03-18T10:02:17.563976579-05:00"
+generated: "2026-05-07T12:13:16.367404668-06:00"
