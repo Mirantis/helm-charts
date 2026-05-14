@@ -82,6 +82,7 @@ roleRef:
   name: {{ .Values.controller.snapshotter.roleName }}
   apiGroup: rbac.authorization.k8s.io
 ---
+{{- if .Values.controller.tainter.enabled }}
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -95,3 +96,4 @@ roleRef:
   kind: ClusterRole
   name: {{ .Values.controller.tainter.roleName }}
   apiGroup: rbac.authorization.k8s.io
+{{- end }}

@@ -58,6 +58,7 @@ apiServerAuthRoleBindingName: cloud-controller-manager:apiserver-authentication-
 apiServerAuthRoleName: extension-apiserver-authentication-reader
 
 serviceAccountName: cloud-controller-manager
+legacyServiceAccountName: cloud-provider
 
 extraVolumes: []
 extraVolumeMounts: []

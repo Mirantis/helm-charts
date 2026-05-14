@@ -17,10 +17,7 @@ controller:
   nameOverride: ""
   podSecurityContext: {}
   podAnnotations: {}
-  tolerations:
-    - effect: NoSchedule
-      key: pd.csi.storage.gke.io/startup
-      operator: Exists
+  tolerations: []
 
   priorityClass:
     name: csi-gce-pd-controller
@@ -103,6 +100,10 @@ controller:
       - "--run-node-service=false"
 
   tainter:
+    # enabled is false because [run-taint-controller, taint-metrics-addr] was not added to the
+    # gce-pd-csi-driver binary in v1.17.x (upstream breakage). Set to true only
+    # when a fixed upstream image is available.
+    enabled: false
     image:
       repository: registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver
       tag: v1.17.4

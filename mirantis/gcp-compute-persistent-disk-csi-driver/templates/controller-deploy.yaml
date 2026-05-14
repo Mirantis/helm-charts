@@ -18,7 +18,13 @@ spec:
       labels: {{- include "gcp-csi.selectorLabels" . | nindent 8 }}
         component: {{ template "csi-controller.name" . }}
     spec:
-      tolerations: {{ toYaml ( .Values.controller.tolerations | default .Values.controller.tolerations ) | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.controller.tolerations | nindent 8 }}
+        {{- if .Values.controller.tainter.enabled }}
+        - effect: NoSchedule
+          key: pd.csi.storage.gke.io/startup
+          operator: Exists
+        {{- end }}
       nodeSelector: {{ toYaml ( .Values.controller.nodeSelector | default .Values.controller.nodeSelector ) | nindent 8 }}
       hostNetwork: true
       serviceAccountName: {{ .Values.controller.serviceAccountName }}
@@ -167,6 +173,7 @@ spec:
               readOnly: true
               mountPath: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}
               subPath: {{ .Values.cloudCredentials.secretKey }}
+        {{- if .Values.controller.tainter.enabled }}
         - name: taint-controller
           image: {{ .Values.controller.tainter.image.repository }}:{{ .Values.controller.tainter.image.tag }}
           {{- with .Values.controller.tainter.command }}
@@ -191,6 +198,7 @@ spec:
               readOnly: true
               mountPath: /etc/kubernetes/{{ .Values.cloudCredentials.secretKey }}
               subPath: {{ .Values.cloudCredentials.secretKey }}
+        {{- end }}
       volumes:
         - name: socket-dir
           emptyDir: {}

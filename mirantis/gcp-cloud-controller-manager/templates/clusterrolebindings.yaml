@@ -26,3 +26,7 @@ subjects:
   apiGroup: ""
   name: {{ .Values.serviceAccountName }}
   namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  apiGroup: ""
+  name: {{ .Values.legacyServiceAccountName }}
+  namespace: {{ .Release.Namespace }}
